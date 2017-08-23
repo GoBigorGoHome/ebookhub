@@ -30,9 +30,9 @@ namespace ebookhub.Controllers
             var path = Path.Combine(_calibreOptions.ContentFolder, file.RelativeFilePath);
 
             var mimeMessage = new MimeMessage();
-            mimeMessage.From.Add(new MailboxAddress(new List<string>() { _smtpOptions.FromAddressTitle },
+            mimeMessage.From.Add(new MailboxAddress(_smtpOptions.FromAddressTitle,
                 _smtpOptions.FromAddress));
-            mimeMessage.To.Add(new MailboxAddress(new List<string>() { _smtpOptions.ToAdressTitle },
+            mimeMessage.To.Add(new MailboxAddress("",
                 recipient.KindleMail));
             mimeMessage.Subject = _smtpOptions.SubjectLine;
 

@@ -7,11 +7,29 @@ Manage and share ebooks in the cloud
 
 ### Prerequisites
 
-MongoDB - https://www.mongodb.com/
-
-Calibre (for meta-data extraction and file conversion) - https://calibre-ebook.com/
+* MongoDB - https://www.mongodb.com/  
+* Calibre (for meta-data extraction and file conversion) - https://calibre-ebook.com/  
+* A mail server or mail accaount (e.g. gmail). The credentials are needed for sending the books by mail (i.e. to a Kindle)
 
 ### Installing
+
+*Server:*  
+1. `dotnet restore`
+2. `dotnet run`
+3. Modify appsettings.json or use the secret manager to specify the following settings:  
+```json
+{  
+ "SmtpOptions": {  
+  "FromAddress": "",    
+  "FromAddressTitle": "", 
+  "Password": ""  
+ }  
+}
+```
+
+*Client:*
+1. `yarn install`
+2. `yarn start`
 
 ## License
 
