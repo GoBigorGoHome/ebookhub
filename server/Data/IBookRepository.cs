@@ -13,5 +13,6 @@ namespace ebookhub.Data
         Task<IEnumerable<Book>> SearchBook(string searchTerm);
         Book UpdateFilePath(Book book, string path);
         bool IsFileExisting(string filePath);
+        Book GetBookByTitle(string title);
     }
 }

@@ -66,5 +66,11 @@ namespace ebookhub.Data
         {
             return _context.Books.Find(b => b.Files.Any(f => f.RelativeFilePath == filePath)).Any();
         }
+
+        public async Task<Book> GetBookByTitle(string title)
+        {
+            var books = await _context.Books.FindAsync(b => b.Title == title);
+            return await books.FirstOrDefaultAsync();
+        }
     }
 }

@@ -189,7 +189,6 @@ namespace ebookhub.Calibre
             string fullPath = Path.GetFullPath(folder);
 
             int counter = 0;
-            List<Book> result = new List<Book>();
             foreach (string foundFile in foundFiles)
             {
                 counter++;
@@ -211,12 +210,12 @@ namespace ebookhub.Calibre
                         RelativeFilePath = relPath
                     });
 
-                    var existingBook = result.FirstOrDefault(book1 => book1.Title == book.Title);
+                    var existingBook = _bookRepository.GetBookByTitle(book.Title);
                     if (existingBook != null)
                     {
                         if (existingBook.Files.All(file => file.RelativeFilePath != relPath))
                         {
-                            _bookRepository.UpdateFilePath(book, relPath);
+                            _bookRepository.UpdateFilePath(existingBook, relPath);
                         }
                     }
                     else
