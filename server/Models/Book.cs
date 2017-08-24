@@ -16,5 +16,6 @@ namespace ebookhub.Models
         public DateTime PublishDateTime { get; set; }
         public List<string> Identifiers { get; set; }
         public List<EBookFile> Files { get; set; } = new List<EBookFile>();
+        public string CoverImagePath { get; set; }
     }
 }

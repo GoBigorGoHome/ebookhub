@@ -35,6 +35,15 @@ namespace ebookhub.Calibre
             return RunCommand(executable, arguments);
         }
 
+        public static List<string> ExportCoverImage(string calibreExecutable, string ebookFile, string outputPath)
+        {
+            calibreOutput = new List<string>();
+            numOutputLines = 0;
+            var executable = calibreExecutable;
+            var arguments = $"\"{ebookFile}\" --get-cover \"{outputPath}\"";
+            return RunCommand(executable, arguments);
+        }
+
         private static List<string> RunCommand(string executable, string arguments)
         {
             var calibreProcess = new Process();
@@ -102,6 +111,107 @@ namespace ebookhub.Calibre
             _bookRepository = bookRepository;
             _logger = logger;
             _options = options.Value;
+        }
+
+        public async Task ImportFromFolder(string folder, List<string> fileTypes)
+        {
+            List<string> foundFiles = new List<string>();
+            foreach (var fileType in fileTypes)
+            {
+                foundFiles.AddRange(Directory.EnumerateFiles(folder, fileType, SearchOption.AllDirectories));
+            }
+
+            _logger.LogInformation($"Found {foundFiles.Count} files to import.");
+
+            string fullPath = Path.GetFullPath(folder);
+
+            int counter = 0;
+            foreach (string foundFile in foundFiles)
+            {
+                counter++;
+                _logger.LogInformation($"{counter}/{foundFiles.Count} - {foundFile}");
+
+                var relPath = ExtractRelativePath(foundFile, _options.ContentFolder);
+                if(_bookRepository.IsFileExisting(relPath))
+                {
+                    _logger.LogInformation($"File has already been imported - {foundFile}");
+                    continue;
+                }
+
+                Book book = await Import(foundFile);
+                if (book != null)
+                {
+                    var existingBook = await _bookRepository.GetBookByTitle(book.Title);
+                    if (existingBook != null)
+                    {
+                        if (existingBook.Files.All(file => file.RelativeFilePath != relPath))
+                        {
+                            _bookRepository.UpdateFilePath(existingBook, relPath);
+                        }
+                    }
+                    else
+                    {
+                        var ebookFile = new EBookFile()
+                        {
+                            FileType = GetFileType(relPath),
+                            RelativeFilePath = relPath
+                        };
+
+                        book.Files.Add(ebookFile);
+
+                        var coverImage = await GetCoverImageFromEBookFile(ebookFile);
+                        if(!string.IsNullOrEmpty(coverImage))
+                        {
+                            book.CoverImagePath = coverImage;
+                        }
+
+                        await _bookRepository.InsertManyBooks(new List<Book>(){book});
+                    }
+                }
+            }
+        }
+
+        public async Task<string> ConvertBookToMobi(string fullPath)
+        {
+            string output_path = Path.ChangeExtension(fullPath, "mobi");
+            if (File.Exists(output_path))
+            {
+                _logger.LogWarning("Output file already exists and will be replaced");
+                File.Delete(output_path);
+            }
+            var task = Task.Run(() => CalibreProcess.ConvertBook(
+                Path.Combine(_options.CalibreBinFolder, "ebook-convert"), fullPath, output_path));
+            await task;
+
+            if (!File.Exists(output_path))
+            {
+                _logger.LogError("Coversion failed!");
+                return null;
+            }
+
+            return output_path;
+        }
+
+        public async Task<string> GetCoverImageFromEBookFile(EBookFile file)
+        {
+            var coverImageFolder = Path.Combine(_options.ContentFolder, "covers");
+            Directory.CreateDirectory(coverImageFolder);
+
+            var fileName = Guid.NewGuid().ToString() + ".png";
+            var coverImagePath = Path.Combine(coverImageFolder, fileName);
+            var task = Task.Run(() => CalibreProcess.ExportCoverImage(
+                Path.Combine(_options.CalibreBinFolder, "ebook-meta"), 
+                Path.Combine(_options.ContentFolder, file.RelativeFilePath),
+                coverImagePath));
+            await task;
+
+            if (!File.Exists(coverImagePath))
+            {
+                _logger.LogWarning("Cover extraction failed!");
+                return null;
+            }
+
+            return Path.Combine("covers", fileName);
         }
 
         private async Task<Book> Import(string fileName)
@@ -174,77 +284,6 @@ namespace ebookhub.Calibre
             }
             
             return null;
-        }
-
-        public async Task ImportFromFolder(string folder, List<string> fileTypes)
-        {
-            List<string> foundFiles = new List<string>();
-            foreach (var fileType in fileTypes)
-            {
-                foundFiles.AddRange(Directory.EnumerateFiles(folder, fileType, SearchOption.AllDirectories));
-            }
-
-            _logger.LogInformation($"Found {foundFiles.Count} files to import.");
-
-            string fullPath = Path.GetFullPath(folder);
-
-            int counter = 0;
-            foreach (string foundFile in foundFiles)
-            {
-                counter++;
-                _logger.LogInformation($"{counter}/{foundFiles.Count} - {foundFile}");
-
-                var relPath = ExtractRelativePath(foundFile, _options.ContentFolder);
-                if(_bookRepository.IsFileExisting(relPath))
-                {
-                    _logger.LogInformation($"File has already been imported - {foundFile}");
-                    continue;
-                }
-
-                Book book = await Import(foundFile);
-                if (book != null)
-                {
-                    book.Files.Add(new EBookFile()
-                    {
-                        FileType = GetFileType(relPath),
-                        RelativeFilePath = relPath
-                    });
-
-                    var existingBook = _bookRepository.GetBookByTitle(book.Title);
-                    if (existingBook != null)
-                    {
-                        if (existingBook.Files.All(file => file.RelativeFilePath != relPath))
-                        {
-                            _bookRepository.UpdateFilePath(existingBook, relPath);
-                        }
-                    }
-                    else
-                    {
-                        await _bookRepository.InsertManyBooks(new List<Book>(){book});
-                    }
-                }
-            }
-        }
-
-        public async Task<string> ConvertBookToMobi(string fullPath)
-        {
-            string output_path = Path.ChangeExtension(fullPath, "mobi");
-            if (File.Exists(output_path))
-            {
-                _logger.LogWarning("Output file already exists and will be replaced");
-                File.Delete(output_path);
-            }
-            var task = Task.Run(() => CalibreProcess.ConvertBook(
-                Path.Combine(_options.CalibreBinFolder, "ebook-convert"), fullPath, output_path));
-            await task;
-
-            if (!File.Exists(output_path))
-            {
-                _logger.LogError("Coversion failed!");
-                return null;
-            }
-
-            return output_path;
         }
 
         private FileType GetFileType(string path)
