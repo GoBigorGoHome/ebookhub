@@ -12,6 +12,6 @@ namespace ebookhub.Data
         Task InsertManyBooks(IEnumerable<Book> books);
         Task<IEnumerable<Book>> SearchBook(string searchTerm);
         Book UpdateFilePath(Book book, string path);
-        bool IsBookExisting(string filePath);
+        bool IsFileExisting(string filePath);
     }
 }

@@ -176,7 +176,7 @@ namespace ebookhub.Calibre
             return null;
         }
 
-        public async Task<List<Book>> ImportFromFolder(string folder, List<string> fileTypes)
+        public async Task ImportFromFolder(string folder, List<string> fileTypes)
         {
             List<string> foundFiles = new List<string>();
             foreach (var fileType in fileTypes)
@@ -196,7 +196,7 @@ namespace ebookhub.Calibre
                 _logger.LogInformation($"{counter}/{foundFiles.Count} - {foundFile}");
 
                 var relPath = ExtractRelativePath(foundFile, _options.ContentFolder);
-                if(_bookRepository.IsBookExisting(relPath))
+                if(_bookRepository.IsFileExisting(relPath))
                 {
                     _logger.LogInformation($"File has already been imported - {foundFile}");
                     continue;
@@ -217,12 +217,6 @@ namespace ebookhub.Calibre
                         if (existingBook.Files.All(file => file.RelativeFilePath != relPath))
                         {
                             _bookRepository.UpdateFilePath(book, relPath);
-
-                            // existingBook.Files.Add(new EBookFile()
-                            // {
-                            //     RelativeFilePath = relPath,
-                            //     FileType = GetFileType(relPath)
-                            // });
                         }
                     }
                     else
@@ -231,7 +225,6 @@ namespace ebookhub.Calibre
                     }
                 }
             }
-            return result;
         }
 
         public async Task<string> ConvertBookToMobi(string fullPath)

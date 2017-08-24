@@ -62,7 +62,7 @@ namespace ebookhub.Data
             return book;
         }
 
-        public bool IsBookExisting(string filePath)
+        public bool IsFileExisting(string filePath)
         {
             return _context.Books.Find(b => b.Files.Any(f => f.RelativeFilePath == filePath)).Any();
         }

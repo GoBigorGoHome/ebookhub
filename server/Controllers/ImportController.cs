@@ -35,12 +35,12 @@ namespace ebookhub.Controllers
             BackgroundJob.Enqueue(() => DoImport());
             return new OkResult();
         }
-
+ 
         public void DoImport()
         {
             Calibre.Calibre calibreProcess = new Calibre.Calibre(_repository, _logger, Options.Create(_options));
-            var books = calibreProcess.ImportFromFolder(_options.ContentFolder, _options.FileTypes).Result;
-            //_repository.InsertManyBooks(books);
+            var result = calibreProcess.ImportFromFolder(_options.ContentFolder, _options.FileTypes);
+            result.Wait();
         }
     }
 }
