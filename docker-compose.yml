@@ -8,3 +8,9 @@ services:
      - mongo
   mongo:
     image: "mongo:3.4"
+  proxy:
+    build: ./nginx
+    ports: 
+      - "80:80"
+    depends_on:
+      - service
