@@ -9,7 +9,7 @@ services:
   mongo:
     image: "mongo:3.4"
   proxy:
-    build: ./nginx
+    build: ./client
     ports: 
       - "80:80"
     depends_on:
