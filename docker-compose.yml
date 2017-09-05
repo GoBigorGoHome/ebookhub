@@ -12,5 +12,7 @@ services:
     build: ./client
     ports: 
       - "80:80"
+    environment:
+      - NODE_ENV=production
     depends_on:
       - service

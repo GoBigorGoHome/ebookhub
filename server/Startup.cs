@@ -93,7 +93,7 @@ namespace ebookhub
 
             app.UseCors(builder =>
                 builder
-                .WithOrigins("http://localhost:3000")
+                .WithOrigins("http://localhost", "http://proxy")
                 .AllowAnyMethod()
                 .AllowAnyHeader()
                 );
