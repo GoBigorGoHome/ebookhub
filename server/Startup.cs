@@ -32,6 +32,8 @@ namespace ebookhub
                 builder.AddUserSecrets();
             }
             Configuration = builder.Build();
+
+            //Console.WriteLine($"FromAddress = {Configuration["SmtpOptions:FromAddress"]}");
         }
 
         public IConfigurationRoot Configuration { get; }

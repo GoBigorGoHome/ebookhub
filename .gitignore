@@ -3,6 +3,7 @@
 
 .DS_store
 .vscode
+.env
 
 # User-specific files
 *.suo

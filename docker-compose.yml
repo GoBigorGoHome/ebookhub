@@ -6,6 +6,10 @@ services:
      - "5000:5555"
     depends_on:
      - mongo
+    environment:
+     - SmtpOptions__FromAddress=${SmtpOptions__FromAddress}
+     - SmtpOptions__FromAddressTitle=${SmtpOptions__FromAddressTitle}
+     - SmtpOptions__Password=${SmtpOptions__Password}
   mongo:
     image: "mongo:3.4"
   proxy:
