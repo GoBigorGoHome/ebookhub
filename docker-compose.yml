@@ -10,6 +10,10 @@ services:
      - SmtpOptions__FromAddress=${SmtpOptions__FromAddress}
      - SmtpOptions__FromAddressTitle=${SmtpOptions__FromAddressTitle}
      - SmtpOptions__Password=${SmtpOptions__Password}
+    volumes:
+      - type: bind
+        source: ${content_folder}
+        target: /content
   mongo:
     image: "mongo:3.4"
   proxy:
@@ -20,3 +24,7 @@ services:
       - NODE_ENV=production
     depends_on:
       - service
+    volumes:
+      - type: bind
+        source: ${content_folder}
+        target: /content
