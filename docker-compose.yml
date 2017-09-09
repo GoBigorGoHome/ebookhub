@@ -31,7 +31,7 @@ services:
     volumes:
       - type: bind
         source: ${content_folder}
-        target: /content
+        target: /data/content
 
 volumes:
   mongo_data:
