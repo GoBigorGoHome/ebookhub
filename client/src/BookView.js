@@ -25,9 +25,14 @@ class BookView extends Component {
     render(){
         return(
             <Paper className="book-paper">
-                <TextField id="Title" label="Title" disabled={true} value={this.props.book.title}/>
-                <TextField id="Author" label="Author(s)" disabled={true} value={this.joinAuthors(this.props.book.authors)}/>
-                <Button raised label="Back" onClick={this.props.goBack}/>
+				<div className="book">
+					<img src={"content/" + this.props.book.coverImagePath} title="Cover image"/>
+					<div className="bookdescription">
+						<p className="bookprop">Title: {this.props.book.title}</p>
+						<p className="bookprop">Author(s): {this.joinAuthors(this.props.book.authors)}</p>
+					</div>
+				</div>
+				<Button raised label="Back" onClick={this.props.goBack}/>
                 <Button raised label="Send" onClick={this.props.send}/>
             </Paper>
         );

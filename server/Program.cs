@@ -14,7 +14,7 @@ namespace ebookhub
         {
             var host = new WebHostBuilder()
                 .UseKestrel()
-                .UseUrls("http://*:5555") //Add this line
+                .UseUrls("http://*:5555") 
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIISIntegration()
                 .UseStartup<Startup>()
