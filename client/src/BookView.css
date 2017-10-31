@@ -1,0 +1,25 @@
+.book {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+}
+  
+.bookdescription {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    margin: 20px;
+}
+
+figure {
+    flex: 1;
+    display: flex;/* again also a flex child */
+    overflow: hidden;/* we'll squeeze children inside */
+    align-items: flex-start;
+  }
+
+img {
+    margin: auto;/* will shrink to fit inside and sit in middle */
+    max-height: 100%;
+    max-width: 100%;
+  }
