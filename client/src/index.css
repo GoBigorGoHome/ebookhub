@@ -4,11 +4,3 @@ body {
   font-family: sans-serif;
 }
 
-.book {
-  display: flex;
-}
-
-.bookdescription {
-  display: flex;
-  flex-direction: column;
-}
