@@ -35,7 +35,8 @@ namespace ebookhub.Controllers
             BackgroundJob.Enqueue(() => DoImport());
             return new OkResult();
         }
- 
+
+        [HttpGet("dummy2")]
         public void DoImport()
         {
             Calibre.Calibre calibreProcess = new Calibre.Calibre(_repository, _logger, Options.Create(_options));

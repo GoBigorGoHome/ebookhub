@@ -35,7 +35,7 @@ namespace ebookhub.Controllers
             _smtpOptions = smtpOptions.Value;
         }
 
-        [HttpGet()]
+        [HttpGet("")]
         public async Task<IEnumerable<Book>> Get()
         {
             return await _repository.GetAllBooks();
@@ -59,6 +59,7 @@ namespace ebookhub.Controllers
             return new OkResult();
         }
 
+        [HttpGet("dummy")]
         public void DoSendBook(string bookId)
         {
             var book = _repository.GetBookById(new ObjectId(bookId)).Result;

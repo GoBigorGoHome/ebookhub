@@ -15,6 +15,7 @@ using Newtonsoft.Json.Serialization;
 using ebookhub.Calibre;
 using ebookhub.Controllers;
 using ebookhub.Data;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace ebookhub
 {
@@ -74,6 +75,11 @@ namespace ebookhub
                 options.SerializerSettings.Converters = new List<JsonConverter> {new ObjectIdConverter()};
             });
             services.AddCors();
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "ebookhub API", Version = "v1" });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -100,6 +106,15 @@ namespace ebookhub
                 .AllowAnyHeader()
                 );
             app.UseStaticFiles();
+
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "ebookhub API V1");
+            });
+
             app.UseMvc();
         }
     }
