@@ -37,5 +37,10 @@ namespace ebookhub.Data
                     , user
                     , new UpdateOptions { IsUpsert = true });
         }
+
+        public async Task AddUser(User user)
+        {
+            await _context.Users.InsertOneAsync(user);
+        }
     }
 }

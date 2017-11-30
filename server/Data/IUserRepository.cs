@@ -9,5 +9,6 @@ namespace ebookhub.Data
     {
         Task<IEnumerable<User>> GetAllUsers();
         Task UpdateUser(User user);
+        Task AddUser(User user);
     }
 }

@@ -15,5 +15,7 @@ namespace ebookhub.Models
         public string Id { get; set; }
         public string KindleMail { get; set; }
         public string Name { get; set; }
+        public string Salt { get; set; }
+        public string Password { get; set; }
     }
 }

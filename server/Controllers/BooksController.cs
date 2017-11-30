@@ -10,6 +10,7 @@ using MongoDB.Bson;
 using ebookhub.Calibre;
 using ebookhub.Data;
 using ebookhub.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ebookhub.Controllers
 {
@@ -35,6 +36,7 @@ namespace ebookhub.Controllers
             _smtpOptions = smtpOptions.Value;
         }
 
+        [Authorize("Bearer")]
         [HttpGet("")]
         public async Task<IEnumerable<Book>> Get()
         {
