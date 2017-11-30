@@ -9,6 +9,11 @@ class BookView extends Component {
 
 	constructor(props){
 		super(props);
+
+		this.linkMap = {
+			0: "mobi",
+			1: "epub"
+		  };
 	}
 
 	joinAuthors(authors){
@@ -23,6 +28,15 @@ class BookView extends Component {
 		)).join('; ')
 	}
 
+	buildFilesList(files){
+		return files
+		.map(file => (<li> + file.relativeFilePath + </li>));
+	}
+
+	buildLink(book){
+		return <a href={"content/" + book.relativeFilePath}>{this.linkMap[book.fileType]}</a>;
+	}
+
     render(){
         return(
             <Paper className="book-paper">
@@ -33,6 +47,9 @@ class BookView extends Component {
 					<div className="bookdescription">
 						<p>Title: {this.props.book.title}</p>
 						<p>Author(s): {this.joinAuthors(this.props.book.authors)}</p>
+						<ul>
+							{this.props.book.files.map(x => <li>{this.buildLink(x)}</li>)}
+						</ul>
 					</div>
 				</div>
 				<Button raised label="Back" onClick={this.props.goBack}/>
