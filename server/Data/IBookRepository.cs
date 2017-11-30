@@ -8,7 +8,7 @@ namespace ebookhub.Data
     public interface IBookRepository
     {
         Task<IEnumerable<Book>> GetAllBooks();
-        Task<Book> GetBookById(ObjectId id);
+        Task<Book> GetBookById(string id);
         Task InsertManyBooks(IEnumerable<Book> books);
         Task<IEnumerable<Book>> SearchBook(string searchTerm);
         Book UpdateFilePath(Book book, string path);

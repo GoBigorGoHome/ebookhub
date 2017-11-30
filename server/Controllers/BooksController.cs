@@ -46,7 +46,7 @@ namespace ebookhub.Controllers
         {
             _logger.LogDebug("Sending book");
 
-            var book = await _repository.GetBookById(new ObjectId(bookID));
+            var book = await _repository.GetBookById(bookID);
 
             if(book == null)
             {
@@ -62,7 +62,7 @@ namespace ebookhub.Controllers
         [HttpGet("dummy")]
         public void DoSendBook(string bookId)
         {
-            var book = _repository.GetBookById(new ObjectId(bookId)).Result;
+            var book = _repository.GetBookById(bookId).Result;
 
             if (book == null)
             {

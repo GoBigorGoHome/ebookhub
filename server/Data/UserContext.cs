@@ -15,16 +15,9 @@ namespace ebookhub.Data
         public UserContext(IOptions<DatabaseOptions> options)
         {
             var client = new MongoClient(options.Value.ConnectionString);
-            if (client != null)
-                _database = client.GetDatabase(options.Value.Database);
+            _database = client.GetDatabase(options.Value.Database);
         }
 
-        public IMongoCollection<User> Users
-        {
-            get
-            {
-                return _database.GetCollection<User>("Users");
-            }
-        }
+        public IMongoCollection<User> Users => _database.GetCollection<User>("Users");
     }
 }

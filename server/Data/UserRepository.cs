@@ -28,7 +28,6 @@ namespace ebookhub.Data
             var existingUser = await _context.Users.FindAsync(user1 => user1.Id == user.Id);
             if (existingUser.FirstOrDefault() == null)
             {
-                user.Id = new ObjectId();
                 await _context.Users.InsertOneAsync(user);
                 return;
             }

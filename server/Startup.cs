@@ -72,7 +72,6 @@ namespace ebookhub
             services.AddMvc().AddJsonOptions(options => {
                 options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                options.SerializerSettings.Converters = new List<JsonConverter> {new ObjectIdConverter()};
             });
             services.AddCors();
 

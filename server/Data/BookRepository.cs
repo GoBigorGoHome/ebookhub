@@ -25,7 +25,7 @@ namespace ebookhub.Data
             return await _context.Books.Find(_ => true).ToListAsync();
         }
 
-        public async Task<Book> GetBookById(ObjectId id)
+        public async Task<Book> GetBookById(string id)
         {
             return await _context.Books.Find(b => b.Id == id).FirstOrDefaultAsync();
         }

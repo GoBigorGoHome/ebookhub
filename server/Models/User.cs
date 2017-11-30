@@ -5,12 +5,14 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson.Serialization.IdGenerators;
 
 namespace ebookhub.Models
 {
     public class User
     {
-        public ObjectId Id { get; set; }
+        [BsonId(IdGenerator = typeof(StringObjectIdGenerator))]
+        public string Id { get; set; }
         public string KindleMail { get; set; }
         public string Name { get; set; }
     }
